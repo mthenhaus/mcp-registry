@@ -43,13 +43,20 @@ Often (but not always) ideas flow through this pipeline:
 make dev-compose
 ```
 
-This starts the registry at [`localhost:8080`](http://localhost:8080) with PostgreSQL. The database uses ephemeral storage and is reset each time you restart the containers, ensuring a clean state for development and testing.
+This starts the registry at [`localhost:8080`](http://localhost:8080) with a JSON file database. By default, the registry stores data in `data/registry.json` which persists between restarts.
+
+**Database options:**
+- **JSON file** (default): Simple file-based storage, no external dependencies
+- **PostgreSQL**: For production use or advanced features (see below)
 
 **Note:** The registry uses [ko](https://ko.build) to build container images. The `make dev-compose` command automatically builds the registry image with ko and loads it into your local Docker daemon before starting the services.
 
 By default, the registry seeds from the production API with a filtered subset of servers (to keep startup fast). This ensures your local environment mirrors production behavior and all seed data passes validation. For offline development you can seed from a file without validation with `MCP_REGISTRY_SEED_FROM=data/seed.json MCP_REGISTRY_ENABLE_REGISTRY_VALIDATION=false make dev-compose`.
 
 The setup can be configured with environment variables in [docker-compose.yml](./docker-compose.yml) - see [.env.example](./.env.example) for a reference.
+
+**Switching to PostgreSQL:**
+If you need PostgreSQL features, set `MCP_REGISTRY_DATABASE_TYPE=postgres` in your environment or docker-compose.yml, and uncomment the postgres service in docker-compose.yml.
 
 <details>
 <summary>Alternative: Running a pre-built Docker image</summary>

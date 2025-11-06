@@ -89,15 +89,15 @@ ko-build: ## Build registry image using ko (loads into local docker daemon)
 	GIT_COMMIT=$$(git rev-parse HEAD) \
 	BUILD_TIME=$$(date -u +%Y-%m-%dT%H:%M:%SZ) \
 	KO_DOCKER_REPO=ko.local \
-	ko build --preserve-import-paths --tags=dev --sbom=none ./cmd/registry
-	@echo "Image built: ko.local/github.com/modelcontextprotocol/registry/cmd/registry:dev"
+	ko build --local --base-import-paths --sbom=none ./cmd/registry
+	@echo "Image built: ko.local/registry"
 
 ko-rebuild: ## Rebuild with ko and restart registry container
 	@$(MAKE) ko-build
 	@echo "Restarting registry container..."
 	@docker compose restart registry
 
-dev-compose: ko-build ## Start development environment with Docker Compose (builds with ko first)
+dev-up: ko-build ## Start development environment with Docker Compose (builds with ko first)
 	@echo "Starting Docker Compose..."
 	docker compose up
 

@@ -9,7 +9,9 @@ import (
 type Config struct {
 	ServerAddress            string `env:"SERVER_ADDRESS" envDefault:":8080"`
 	DatabaseURL              string `env:"DATABASE_URL" envDefault:"postgres://localhost:5432/mcp-registry?sslmode=disable"`
-	SeedFrom                 string `env:"SEED_FROM" envDefault:""`
+	DatabaseType             string `env:"DATABASE_TYPE" envDefault:"jsonfile"` // "postgres" or "jsonfile"
+	JSONFilePath             string `env:"JSON_FILE_PATH" envDefault:"data/registry.json"`
+	SeedFrom                 string `env:"SEED_FROM" envDefault:"data/seed.json"`
 	Version                  string `env:"VERSION" envDefault:"dev"`
 	GithubClientID           string `env:"GITHUB_CLIENT_ID" envDefault:""`
 	GithubClientSecret       string `env:"GITHUB_CLIENT_SECRET" envDefault:""`
@@ -24,6 +26,10 @@ type Config struct {
 	OIDCExtraClaims  string `env:"OIDC_EXTRA_CLAIMS" envDefault:""`
 	OIDCEditPerms    string `env:"OIDC_EDIT_PERMISSIONS" envDefault:""`
 	OIDCPublishPerms string `env:"OIDC_PUBLISH_PERMISSIONS" envDefault:""`
+
+	// AWS SQS Configuration
+	SQSEnabled  bool   `env:"SQS_ENABLED" envDefault:"false"`
+	SQSQueueURL string `env:"SQS_QUEUE_URL" envDefault:""`
 }
 
 // NewConfig creates a new configuration with default values

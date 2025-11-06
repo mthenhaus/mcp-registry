@@ -13,6 +13,7 @@ import (
 
 	"github.com/modelcontextprotocol/registry/internal/api"
 	v0 "github.com/modelcontextprotocol/registry/internal/api/handlers/v0"
+	"github.com/modelcontextprotocol/registry/internal/aws"
 	"github.com/modelcontextprotocol/registry/internal/config"
 	"github.com/modelcontextprotocol/registry/internal/database"
 	"github.com/modelcontextprotocol/registry/internal/importer"
@@ -51,29 +52,46 @@ func main() {
 	var (
 		registryService service.RegistryService
 		db              database.Database
+		jsonDB          *database.JSONFileDB
+		sqsListener     *aws.SQSListener
 		err             error
 	)
 
 	// Initialize configuration
 	cfg := config.NewConfig()
 
-	// Create a context with timeout for PostgreSQL connection
+	// Create a context with timeout for database connection
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	// Connect to PostgreSQL
-	db, err = database.NewPostgreSQL(ctx, cfg.DatabaseURL)
-	if err != nil {
-		log.Printf("Failed to connect to PostgreSQL: %v", err)
+	// Connect to database based on DatabaseType
+	switch cfg.DatabaseType {
+	case "jsonfile":
+		log.Printf("Using JSON file database at %s", cfg.JSONFilePath)
+		jsonDB, err = database.NewJSONFileDB(ctx, cfg.JSONFilePath)
+		if err != nil {
+			log.Printf("Failed to initialize JSON file database: %v", err)
+			return
+		}
+		db = jsonDB
+	case "postgres":
+		log.Printf("Using PostgreSQL database")
+		db, err = database.NewPostgreSQL(ctx, cfg.DatabaseURL)
+		if err != nil {
+			log.Printf("Failed to connect to PostgreSQL: %v", err)
+			return
+		}
+	default:
+		log.Printf("Invalid database type: %s (must be 'postgres' or 'jsonfile')", cfg.DatabaseType)
 		return
 	}
 
-	// Store the PostgreSQL instance for later cleanup
+	// Store the database instance for later cleanup
 	defer func() {
 		if err := db.Close(); err != nil {
-			log.Printf("Error closing PostgreSQL connection: %v", err)
+			log.Printf("Error closing database connection: %v", err)
 		} else {
-			log.Println("PostgreSQL connection closed successfully")
+			log.Println("Database connection closed successfully")
 		}
 	}()
 
@@ -88,6 +106,37 @@ func main() {
 		importerService := importer.NewService(registryService)
 		if err := importerService.ImportFromPath(ctx, cfg.SeedFrom); err != nil {
 			log.Printf("Failed to import seed data: %v", err)
+		}
+	}
+
+	// Initialize SQS listener if enabled and using JSON file database
+	if cfg.SQSEnabled && cfg.DatabaseType == "jsonfile" {
+		if cfg.SQSQueueURL == "" {
+			log.Printf("SQS is enabled but SQS_QUEUE_URL is not configured")
+		} else if jsonDB == nil {
+			log.Printf("SQS listener can only be used with JSON file database")
+		} else {
+			log.Printf("Initializing SQS listener for queue: %s", cfg.SQSQueueURL)
+
+			// Create context for SQS listener
+			sqsCtx := context.Background()
+
+			sqsListener, err = aws.NewSQSListener(sqsCtx, aws.SQSListenerConfig{
+				QueueURL:       cfg.SQSQueueURL,
+				TargetFilePath: cfg.JSONFilePath,
+				ReloadCallback: func() error {
+					return jsonDB.Reload()
+				},
+				MaxMessages:     1,
+				WaitTimeSeconds: 20,
+			})
+			if err != nil {
+				log.Printf("Failed to initialize SQS listener: %v", err)
+			} else {
+				// Start the listener
+				sqsListener.Start(sqsCtx)
+				log.Printf("SQS listener started successfully")
+			}
 		}
 	}
 
@@ -127,6 +176,11 @@ func main() {
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 	log.Println("Shutting down server...")
+
+	// Stop SQS listener if running
+	if sqsListener != nil {
+		sqsListener.Stop()
+	}
 
 	// Create context with timeout for shutdown
 	sctx, scancel := context.WithTimeout(context.Background(), 10*time.Second)
