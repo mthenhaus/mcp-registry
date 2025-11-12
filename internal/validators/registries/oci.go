@@ -36,6 +36,8 @@ var allowedOCIRegistries = map[string]bool{
 	// Google Artifact Registry (*.pkg.dev pattern handled in isAllowedRegistry)
 	// Microsoft Container Registry
 	"mcr.microsoft.com": true,
+	// AWS public registry
+	"public.ecr.aws": true,
 }
 
 // ValidateOCI validates that an OCI image contains the correct MCP server name annotation.
@@ -50,6 +52,8 @@ var allowedOCIRegistries = map[string]bool{
 //   - GitHub Container Registry (ghcr.io)
 //   - Google Artifact Registry (*.pkg.dev)
 //   - Microsoft Container Registry (mcr.microsoft.com)
+//   - AWS public registry (public.ecr.aws)
+//   - Custom registries added to allowedOCIRegistries map
 func ValidateOCI(ctx context.Context, pkg model.Package, serverName string) error {
 	if pkg.Identifier == "" {
 		return ErrMissingIdentifierForOCI

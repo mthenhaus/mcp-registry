@@ -1,689 +1,145 @@
 [
   {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.aliengiraffe/spotdb",
-    "description": "Ephemeral data sandbox for AI workflows with guardrails and security",
+    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+    "name": "com.joelverhagen.mcp/Knapcode.SampleMcpServer",
+    "description": "A sample MCP server using the MCP C# SDK. Generates random numbers and random weather.",
     "repository": {
-      "url": "https://github.com/aliengiraffe/spotdb",
+      "url": "https://github.com/joelverhagen/Knapcode.SampleMcpServer",
       "source": "github"
     },
-    "version": "0.1.0",
+    "version": "0.10.0-beta.10",
+    "packages": [
+      {
+        "registryType": "nuget",
+        "registryBaseUrl": "https://api.nuget.org",
+        "identifier": "Knapcode.SampleMcpServer",
+        "version": "0.10.0-beta.10",
+        "transport": {
+          "type": "stdio"
+        },
+        "packageArguments": [
+          {
+            "value": "mcp",
+            "type": "positional"
+          },
+          {
+            "value": "start",
+            "type": "positional"
+          }
+        ],
+        "environmentVariables": [
+          {
+            "value": "{weather_choices}",
+            "variables": {
+              "weather_choices": {
+                "description": "Comma separated list of weather descriptions to randomly select."
+              }
+            },
+            "name": "WEATHER_CHOICES"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+    "name": "io.github.goreleaser/mcp",
+    "description": "GoReleaser MCP server for build automation",
+    "repository": {
+      "url": "https://github.com/goreleaser/mcp",
+      "source": "github"
+    },
+    "version": "0.1.4",
     "packages": [
       {
         "registryType": "oci",
-        "identifier": "docker.io/aliengiraffe/spotdb:0.1.0",
-        "transport": {
-          "type": "stdio"
-        },
-        "environmentVariables": [
-          {
-            "description": "Optional API key for request authentication",
-            "format": "string",
-            "isSecret": true,
-            "name": "X-API-Key"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.alpic.test/test-mcp-server",
-    "description": "Alpic Test MCP Server - great server!",
-    "repository": {},
-    "version": "0.0.1",
-    "remotes": [
-      {
-        "type": "streamable-http",
-        "url": "https://test.alpic.ai/"
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
-    "name": "ai.exa/exa",
-    "description": "Fast, intelligent web search and web crawling.\n\nNew mcp tool: Exa-code is a context tool for coding ",
-    "repository": {
-      "url": "https://github.com/exa-labs/exa-mcp-server",
-      "source": "github"
-    },
-    "version": "3.0.7",
-    "remotes": [
-      {
-        "type": "streamable-http",
-        "url": "https://mcp.exa.ai/mcp"
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
-    "name": "ai.exa/exa",
-    "description": "Fast, intelligent web search and web crawling.\n\nNew mcp tool: Exa-code is a context tool for coding ",
-    "repository": {
-      "url": "https://github.com/exa-labs/exa-mcp-server",
-      "source": "github"
-    },
-    "version": "3.0.9",
-    "remotes": [
-      {
-        "type": "streamable-http",
-        "url": "https://mcp.exa.ai/mcp"
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.explorium/mcp-explorium",
-    "description": "Access live company and contact data from Explorium's AgentSource B2B platform.",
-    "repository": {},
-    "version": "1.0.0",
-    "remotes": [
-      {
-        "type": "sse",
-        "url": "https://mcp-github-registry.explorium.ai/sse"
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
-    "name": "ai.explorium/mcp-explorium",
-    "description": "Access live company and contact data from Explorium's AgentSource B2B platform.",
-    "repository": {
-      "url": "https://github.com/explorium-ai/mcp-explorium",
-      "source": "github"
-    },
-    "version": "1.0.1",
-    "remotes": [
-      {
-        "type": "streamable-http",
-        "url": "https://mcp-github-registry.explorium.ai/mcp"
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.gomarble/mcp-api",
-    "description": "GoMarble MCP API Server",
-    "repository": {},
-    "version": "1.0.0",
-    "remotes": [
-      {
-        "type": "sse",
-        "url": "https://apps.gomarble.ai/mcp-api/sse"
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.klavis/strata",
-    "description": "MCP server for progressive tool usage at any scale (see https://klavis.ai)",
-    "repository": {
-      "url": "https://github.com/Klavis-AI/klavis",
-      "source": "github"
-    },
-    "version": "1.0.0",
-    "remotes": [
-      {
-        "type": "streamable-http",
-        "url": "https://strata.klavis.ai/mcp/"
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.mcpanalytics/analytics",
-    "description": "ML statistical analysis platform for data teams",
-    "repository": {},
-    "version": "1.0.0",
-    "remotes": [
-      {
-        "type": "streamable-http",
-        "url": "https://api.mcpanalytics.ai/auth0"
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.mcpanalytics/analytics",
-    "description": "MCP Analytics, searchable tools and reports with interactive HTML visualization",
-    "repository": {},
-    "version": "1.0.1",
-    "remotes": [
-      {
-        "type": "streamable-http",
-        "url": "https://api.mcpanalytics.ai/auth0"
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.mcpanalytics/analytics",
-    "description": "MCP Analytics, searchable tools and reports with interactive HTML visualization",
-    "repository": {
-      "url": "https://github.com/embeddedlayers/mcp-analytics",
-      "source": "github"
-    },
-    "version": "1.0.2",
-    "remotes": [
-      {
-        "type": "streamable-http",
-        "url": "https://api.mcpanalytics.ai/auth0"
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.mcpanalytics/analytics",
-    "description": "MCP Analytics, searchable tools and reports with interactive HTML visualization",
-    "repository": {
-      "url": "https://github.com/embeddedlayers/mcp-analytics",
-      "source": "github"
-    },
-    "version": "1.0.3",
-    "remotes": [
-      {
-        "type": "streamable-http",
-        "url": "https://api.mcpanalytics.ai/auth0"
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.mcpcap/mcpcap",
-    "description": "An MCP server for analyzing PCAP files.",
-    "repository": {
-      "url": "https://github.com/mcpcap/mcpcap",
-      "source": "github"
-    },
-    "version": "0.4.3",
-    "packages": [
-      {
-        "registryType": "pypi",
-        "registryBaseUrl": "https://pypi.org",
-        "identifier": "mcpcap",
-        "version": "0.4.3",
+        "identifier": "ghcr.io/goreleaser/mcp:0.1.4",
         "transport": {
           "type": "stdio"
         }
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.mcpcap/mcpcap",
-    "description": "An MCP server for analyzing PCAP files.",
-    "repository": {
-      "url": "https://github.com/mcpcap/mcpcap",
-      "source": "github"
-    },
-    "version": "0.4.4",
-    "packages": [
-      {
-        "registryType": "pypi",
-        "registryBaseUrl": "https://pypi.org",
-        "identifier": "mcpcap",
-        "version": "0.4.4",
-        "transport": {
-          "type": "stdio"
-        }
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.mcpcap/mcpcap",
-    "description": "An MCP server for analyzing PCAP files.",
-    "repository": {
-      "url": "https://github.com/mcpcap/mcpcap",
-      "source": "github"
-    },
-    "version": "0.5.10",
-    "packages": [
-      {
-        "registryType": "pypi",
-        "registryBaseUrl": "https://pypi.org",
-        "identifier": "mcpcap",
-        "version": "0.4.4",
-        "transport": {
-          "type": "stdio"
-        }
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.mcpcap/mcpcap",
-    "description": "An MCP server for analyzing PCAP files.",
-    "repository": {
-      "url": "https://github.com/mcpcap/mcpcap",
-      "source": "github"
-    },
-    "version": "0.5.2",
-    "packages": [
-      {
-        "registryType": "pypi",
-        "registryBaseUrl": "https://pypi.org",
-        "identifier": "mcpcap",
-        "version": "0.4.4",
-        "transport": {
-          "type": "stdio"
-        }
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.mcpcap/mcpcap",
-    "description": "An MCP server for analyzing PCAP files.",
-    "repository": {
-      "url": "https://github.com/mcpcap/mcpcap",
-      "source": "github"
-    },
-    "version": "0.5.3",
-    "packages": [
-      {
-        "registryType": "pypi",
-        "registryBaseUrl": "https://pypi.org",
-        "identifier": "mcpcap",
-        "version": "0.4.4",
-        "transport": {
-          "type": "stdio"
-        }
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.mcpcap/mcpcap",
-    "description": "An MCP server for analyzing PCAP files.",
-    "repository": {
-      "url": "https://github.com/mcpcap/mcpcap",
-      "source": "github"
-    },
-    "version": "0.5.4",
-    "packages": [
-      {
-        "registryType": "pypi",
-        "registryBaseUrl": "https://pypi.org",
-        "identifier": "mcpcap",
-        "version": "0.4.4",
-        "transport": {
-          "type": "stdio"
-        }
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.mcpcap/mcpcap",
-    "description": "An MCP server for analyzing PCAP files.",
-    "repository": {
-      "url": "https://github.com/mcpcap/mcpcap",
-      "source": "github"
-    },
-    "version": "0.5.5",
-    "packages": [
-      {
-        "registryType": "pypi",
-        "registryBaseUrl": "https://pypi.org",
-        "identifier": "mcpcap",
-        "version": "0.4.4",
-        "transport": {
-          "type": "stdio"
-        }
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.mcpcap/mcpcap",
-    "description": "An MCP server for analyzing PCAP files.",
-    "repository": {
-      "url": "https://github.com/mcpcap/mcpcap",
-      "source": "github"
-    },
-    "version": "0.5.6",
-    "packages": [
-      {
-        "registryType": "pypi",
-        "registryBaseUrl": "https://pypi.org",
-        "identifier": "mcpcap",
-        "version": "0.4.4",
-        "transport": {
-          "type": "stdio"
-        }
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.mcpcap/mcpcap",
-    "description": "An MCP server for analyzing PCAP files.",
-    "repository": {
-      "url": "https://github.com/mcpcap/mcpcap",
-      "source": "github"
-    },
-    "version": "0.5.7",
-    "packages": [
-      {
-        "registryType": "pypi",
-        "registryBaseUrl": "https://pypi.org",
-        "identifier": "mcpcap",
-        "version": "0.4.4",
-        "transport": {
-          "type": "stdio"
-        }
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.mcpcap/mcpcap",
-    "description": "An MCP server for analyzing PCAP files.",
-    "repository": {
-      "url": "https://github.com/mcpcap/mcpcap",
-      "source": "github"
-    },
-    "version": "0.5.8",
-    "packages": [
-      {
-        "registryType": "pypi",
-        "registryBaseUrl": "https://pypi.org",
-        "identifier": "mcpcap",
-        "version": "0.4.4",
-        "transport": {
-          "type": "stdio"
-        }
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.mcpcap/mcpcap",
-    "description": "An MCP server for analyzing PCAP files.",
-    "repository": {
-      "url": "https://github.com/mcpcap/mcpcap",
-      "source": "github"
-    },
-    "version": "0.5.9",
-    "packages": [
-      {
-        "registryType": "pypi",
-        "registryBaseUrl": "https://pypi.org",
-        "identifier": "mcpcap",
-        "version": "0.4.4",
-        "transport": {
-          "type": "stdio"
-        }
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.mcpcap/mcpcap",
-    "description": "An MCP server for analyzing PCAP files.",
-    "repository": {
-      "url": "https://github.com/mcpcap/mcpcap",
-      "source": "github"
-    },
-    "version": "0.6.0",
-    "packages": [
-      {
-        "registryType": "pypi",
-        "registryBaseUrl": "https://pypi.org",
-        "identifier": "mcpcap",
-        "version": "0.4.4",
-        "transport": {
-          "type": "stdio"
-        }
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.meminal/meminal",
-    "description": "Memory for deep conversational context across any platform",
-    "repository": {},
-    "version": "1.0.0",
-    "remotes": [
-      {
-        "type": "streamable-http",
-        "url": "https://meminal.ai/mcp",
-        "headers": [
-          {
-            "description": "Bearer token for authentication (OAuth or Personal Access Token)",
-            "isSecret": true,
-            "name": "Authorization"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.shawndurrani/mcp-merchant",
-    "description": "Search-only commerce MCP server backed by Stripe (test)",
-    "repository": {},
-    "version": "0.1.0",
-    "packages": [
+      },
       {
         "registryType": "npm",
-        "registryBaseUrl": "https://registry.npmjs.org",
-        "identifier": "mcp-merchant",
-        "version": "0.1.0",
-        "runtimeHint": "npx",
+        "identifier": "@goreleaser/mcp",
+        "version": "0.1.4",
         "transport": {
           "type": "stdio"
-        },
-        "environmentVariables": [
-          {
-            "description": "Stripe secret key (test mode)",
-            "isRequired": true,
-            "isSecret": true,
-            "name": "STRIPE_SECRET_KEY"
-          },
-          {
-            "description": "Max products to cache",
-            "default": "100",
-            "name": "PRODUCT_LIMIT"
-          },
-          {
-            "description": "Catalog refresh interval in seconds",
-            "default": "600",
-            "name": "REFRESH_INTERVAL_SEC"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.shawndurrani/mcp-merchant",
-    "description": "Search-only commerce MCP server backed by Stripe (test)",
-    "repository": {},
-    "version": "0.1.1",
-    "packages": [
-      {
-        "registryType": "npm",
-        "registryBaseUrl": "https://registry.npmjs.org",
-        "identifier": "mcp-merchant",
-        "version": "0.1.1",
-        "runtimeHint": "npx",
-        "transport": {
-          "type": "stdio"
-        },
-        "environmentVariables": [
-          {
-            "description": "Stripe secret key (test mode)",
-            "isRequired": true,
-            "isSecret": true,
-            "name": "STRIPE_SECRET_KEY"
-          },
-          {
-            "description": "Max products to cache",
-            "default": "100",
-            "name": "PRODUCT_LIMIT"
-          },
-          {
-            "description": "Catalog refresh interval in seconds",
-            "default": "600",
-            "name": "REFRESH_INTERVAL_SEC"
-          }
-        ]
-      }
-    ],
-    "remotes": [
-      {
-        "type": "sse",
-        "url": "https://mcp.shawndurrani.ai/sse"
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.shawndurrani/mcp-merchant",
-    "description": "Search-only commerce MCP server backed by Stripe (test)",
-    "repository": {},
-    "version": "0.1.3",
-    "packages": [
-      {
-        "registryType": "npm",
-        "registryBaseUrl": "https://registry.npmjs.org",
-        "identifier": "mcp-merchant",
-        "version": "0.1.3",
-        "runtimeHint": "npx",
-        "transport": {
-          "type": "stdio"
-        },
-        "environmentVariables": [
-          {
-            "description": "Stripe secret key (test mode)",
-            "isRequired": true,
-            "isSecret": true,
-            "name": "STRIPE_SECRET_KEY"
-          },
-          {
-            "description": "Max products to cache",
-            "default": "100",
-            "name": "PRODUCT_LIMIT"
-          },
-          {
-            "description": "Catalog refresh interval in seconds",
-            "default": "600",
-            "name": "REFRESH_INTERVAL_SEC"
-          }
-        ]
-      }
-    ],
-    "remotes": [
-      {
-        "type": "sse",
-        "url": "https://mcp.shawndurrani.ai/sse"
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.shawndurrani/mcp-registry",
-    "description": "Search the public MCP Registry; discover servers and copy SSE URLs.",
-    "repository": {},
-    "version": "0.1.0",
-    "remotes": [
-      {
-        "type": "sse",
-        "url": "https://mcp-registry.shawndurrani.ai/sse"
-      }
-    ]
-  },
-  {
-    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
-    "name": "ai.shawndurrani/mcp-registry",
-    "description": "Search the public MCP Registry; discover servers and copy SSE URLs.",
-    "repository": {},
-    "version": "0.1.1",
-    "remotes": [
-      {
-        "type": "sse",
-        "url": "https://mcp-registry.shawndurrani.ai/sse"
+        }
       }
     ]
   },
   {
     "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
-    "name": "io.github.microsoft/playwright-mcp",
+    "name": "io.github.domdomegg/time-mcp-nuget",
+    "description": "Get the current UTC time in RFC 3339 format.",
+    "repository": {
+      "url": "https://github.com/domdomegg/time-mcp-nuget.git",
+      "source": "github"
+    },
+    "version": "1.0.8",
+    "packages": [
+      {
+        "registryType": "nuget",
+        "identifier": "TimeMcpServer",
+        "version": "1.0.8",
+        "runtimeHint": "dnx",
+        "transport": {
+          "type": "stdio"
+        }
+      }
+    ]
+  },
+  {
+    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+    "name": "us.mthenhaus.mcp/docker/mcp-playwright",
     "description": "MCP server for Microsoft Playwright testing framework",
     "repository": {
-      "url": "https://github.com/microsoft/playwright-mcp",
+      "url": "https://github.com/mthenhaus/playwright-mcp",
       "source": "github"
     },
-    "version": "0.0.46",
+    "version": "latest",
     "packages": [
       {
         "registryType": "oci",
-        "identifier": "mcr.microsoft.com/playwright/mcp",
+        "identifier": "public.ecr.aws/h8n5l2g5/mcp/playwright:latest",
         "transport": {
           "type": "stdio"
         },
         "runtimeArguments": [
           {
-            "type": "named",
-            "name": "--network",
-            "value": "host",
-            "description": "Use host network mode"
-          },
-          {
-            "type": "named",
-            "name": "-e",
-            "value": "DB_TYPE={db_type}",
-            "description": "Database type to connect to",
-            "isRepeated": true,
-            "variables": {
-              "db_type": {
-                "description": "Type of database",
-                "choices": ["postgres", "mysql", "mongodb", "redis"],
-                "isRequired": true
-              }
-            }
-          }
-        ],
-        "packageArguments": [
-          {
-            "type": "named",
-            "name": "--host",
-            "description": "Database host",
-            "default": "localhost",
-            "isRequired": true
-          },
-          {
-            "type": "named",
-            "name": "--port",
-            "description": "Database port",
-            "format": "number"
+            "type": "positional",
+            "name": "--rm",
+            "value": ""
           },
           {
             "type": "positional",
-            "valueHint": "database_name",
-            "description": "Name of the database to connect to",
-            "isRequired": true
-          }
-        ],
-        "environmentVariables": [
-          {
-            "name": "DB_USERNAME",
-            "description": "Database username",
-            "isRequired": true
+            "name": "-i",
+            "value": ""
           },
           {
-            "name": "DB_PASSWORD",
-            "description": "Database password",
-            "isRequired": true,
-            "isSecret": true
+            "type": "positional",
+            "name": "--init",
+            "value": ""
           },
           {
-            "name": "SSL_MODE",
-            "description": "SSL connection mode",
-            "default": "prefer",
-            "choices": ["disable", "prefer", "require"]
+            "type": "positional",
+            "name": "--ipc",
+            "value": "host"
+          },
+          {
+            "type": "positional",
+            "name": "--network",
+            "value": "host"
+          },
+          {
+            "type": "positional",
+            "name": "--mount",
+            "value": ""
+          },
+          {
+            "type": "positional",
+            "name": "type",
+            "value": "bind,src=./mcp.io/playwright,dst=/tmp/playwright-output"
           }
         ]
       }

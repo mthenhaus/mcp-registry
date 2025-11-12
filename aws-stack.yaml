@@ -160,13 +160,6 @@ Resources:
       SecurityGroups:
         - !Ref ALBSecurityGroup
 
-  # Self-signed certificate for HTTPS (for production, use ACM)
-  #SelfSignedCertificate:
-  #  Type: AWS::CertificateManager::Certificate
-  #  Properties:
-  #    DomainName: !GetAtt ApplicationLoadBalancer.DNSName
-  #    ValidationMethod: DNS
-
   ALBListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
@@ -174,10 +167,10 @@ Resources:
         - Type: forward
           TargetGroupArn: !Ref ALBTargetGroup
       LoadBalancerArn: !Ref ApplicationLoadBalancer
-      Port: 80
-      Protocol: HTTP
-      #Certificates:
-      #  - CertificateArn: !Ref SelfSignedCertificate
+      Port: 443
+      Protocol: HTTPS
+      Certificates:
+        - CertificateArn: arn:aws:acm:us-east-1:891377096513:certificate/2ca2f474-adc6-4249-a123-41b01fb946f1
 
   ALBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -261,9 +254,6 @@ Resources:
               Value: '*'
             - Name: MCP_REGISTRY_ENABLE_REGISTRY_VALIDATION
               Value: true
-
-
-
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -400,12 +390,6 @@ Outputs:
     Value: !Ref SQSQueue
     Export:
       Name: !Sub '${AWS::StackName}-SQSQueueURL'
-
-  #S3BucketName:
-  #  Description: 'S3 Bucket Name'
-  #  Value: !Ref S3Bucket
-  #  Export:
-  #    Name: !Sub '${AWS::StackName}-S3BucketName'
 
   ECSClusterName:
     Description: 'ECS Cluster Name'

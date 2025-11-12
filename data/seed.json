@@ -91,80 +91,55 @@
   },
   {
     "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
-    "name": "io.github.microsoft/playwright-mcp",
+    "name": "us.mthenhaus.mcp/docker/mcp-playwright",
     "description": "MCP server for Microsoft Playwright testing framework",
     "repository": {
-      "url": "https://github.com/microsoft/playwright-mcp",
+      "url": "https://github.com/mthenhaus/playwright-mcp",
       "source": "github"
     },
-    "version": "0.0.46",
+    "version": "latest",
     "packages": [
       {
         "registryType": "oci",
-        "identifier": "mcr.microsoft.com/playwright/mcp",
+        "identifier": "public.ecr.aws/h8n5l2g5/mcp/playwright:latest",
         "transport": {
           "type": "stdio"
         },
         "runtimeArguments": [
           {
-            "type": "named",
-            "name": "--network",
-            "value": "host",
-            "description": "Use host network mode"
-          },
-          {
-            "type": "named",
-            "name": "-e",
-            "value": "DB_TYPE={db_type}",
-            "description": "Database type to connect to",
-            "isRepeated": true,
-            "variables": {
-              "db_type": {
-                "description": "Type of database",
-                "choices": ["postgres", "mysql", "mongodb", "redis"],
-                "isRequired": true
-              }
-            }
-          }
-        ],
-        "packageArguments": [
-          {
-            "type": "named",
-            "name": "--host",
-            "description": "Database host",
-            "default": "localhost",
-            "isRequired": true
-          },
-          {
-            "type": "named",
-            "name": "--port",
-            "description": "Database port",
-            "format": "number"
+            "type": "positional",
+            "name": "--rm",
+            "value": ""
           },
           {
             "type": "positional",
-            "valueHint": "database_name",
-            "description": "Name of the database to connect to",
-            "isRequired": true
-          }
-        ],
-        "environmentVariables": [
-          {
-            "name": "DB_USERNAME",
-            "description": "Database username",
-            "isRequired": true
+            "name": "-i",
+            "value": ""
           },
           {
-            "name": "DB_PASSWORD",
-            "description": "Database password",
-            "isRequired": true,
-            "isSecret": true
+            "type": "positional",
+            "name": "--init",
+            "value": ""
           },
           {
-            "name": "SSL_MODE",
-            "description": "SSL connection mode",
-            "default": "prefer",
-            "choices": ["disable", "prefer", "require"]
+            "type": "positional",
+            "name": "--ipc",
+            "value": "host"
+          },
+          {
+            "type": "positional",
+            "name": "--network",
+            "value": "host"
+          },
+          {
+            "type": "positional",
+            "name": "--mount",
+            "value": ""
+          },
+          {
+            "type": "positional",
+            "name": "type",
+            "value": "bind,src=./mcp.io/playwright,dst=/tmp/playwright-output"
           }
         ]
       }
