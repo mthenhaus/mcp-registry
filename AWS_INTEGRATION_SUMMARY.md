@@ -132,9 +132,9 @@ Comprehensive documentation including:
 ## Message Flow
 
 1. **External System**: Uploads updated `registry.json` to S3
-2. **External System**: Sends SQS message: `{"s3_uri": "s3://bucket/key"}`
+2. **External System**: Sends SQS message: `{"s3_url": "https://bucket.s3.region.amazonaws.com/key"}`
 3. **SQS Listener**: Receives message via long polling
-4. **SQS Listener**: Parses S3 URI from message body
+4. **SQS Listener**: Parses S3 Object URL from message body
 5. **S3 Downloader**: Downloads file from S3 to temporary location
 6. **S3 Downloader**: Atomically replaces target file
 7. **Database**: Reloads data from updated file
@@ -148,7 +148,7 @@ Comprehensive documentation including:
 - **Thread-safe Reload**: Database reload is protected with mutex
 - **Graceful Shutdown**: SQS listener stops cleanly on application exit
 - **Error Handling**: Failed messages remain in queue for retry
-- **Validation**: S3 URIs are validated before processing
+- **Validation**: S3 Object URLs are validated before processing
 
 ## Configuration Example
 
@@ -170,9 +170,9 @@ export AWS_REGION=us-east-1
 ## Testing
 
 Unit tests verify:
-- S3 URI parsing with various formats
-- Error handling for invalid URIs
-- Edge cases (empty strings, missing components)
+- S3 Object URL parsing with various formats (virtual-hosted-style and path-style)
+- Error handling for invalid URLs
+- Edge cases (empty strings, missing components, non-S3 URLs)
 
 Integration testing requires:
 - AWS account with S3 and SQS

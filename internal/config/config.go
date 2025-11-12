@@ -16,7 +16,7 @@ type Config struct {
 	GithubClientID           string `env:"GITHUB_CLIENT_ID" envDefault:""`
 	GithubClientSecret       string `env:"GITHUB_CLIENT_SECRET" envDefault:""`
 	JWTPrivateKey            string `env:"JWT_PRIVATE_KEY" envDefault:""`
-	EnableAnonymousAuth      bool   `env:"ENABLE_ANONYMOUS_AUTH" envDefault:"false"`
+	EnableAnonymousAuth      bool   `env:"ENABLE_ANONYMOUS_AUTH" envDefault:"true"`
 	EnableRegistryValidation bool   `env:"ENABLE_REGISTRY_VALIDATION" envDefault:"true"`
 
 	// OIDC Configuration
@@ -28,6 +28,7 @@ type Config struct {
 	OIDCPublishPerms string `env:"OIDC_PUBLISH_PERMISSIONS" envDefault:""`
 
 	// AWS SQS Configuration
+	Region      string `env:"AWS_REGION" envDefault:"us-east-1"`
 	SQSEnabled  bool   `env:"SQS_ENABLED" envDefault:"false"`
 	SQSQueueURL string `env:"SQS_QUEUE_URL" envDefault:""`
 }

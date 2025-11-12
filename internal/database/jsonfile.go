@@ -82,10 +82,13 @@ func (db *JSONFileDB) load() error {
 		return nil
 	}
 
-	var fileData jsonFileData
-	if err := json.Unmarshal(data, &fileData); err != nil {
+	var serverResponses []apiv0.ServerJSON
+	if err := json.Unmarshal(data, &serverResponses); err != nil {
 		return err
 	}
+
+	var fileData jsonFileData
+	fileData.Servers = make([]serverRecord, 0, len(serverResponses))
 
 	db.data = &fileData
 	return nil
@@ -100,18 +103,22 @@ func (db *JSONFileDB) Reload() error {
 
 // save writes data to the JSON file
 func (db *JSONFileDB) save() error {
-	data, err := json.MarshalIndent(db.data, "", "  ")
-	if err != nil {
-		return err
-	}
+	// Note: Actual implementation of saving to JSON file is omitted until ephemral writes succeed
+	/*
+		data, err := json.MarshalIndent(db.data.Servers, "", "  ")
+		if err != nil {
+			return err
+		}
 
-	// Write to temp file first, then rename (atomic on most systems)
-	tempFile := db.filePath + ".tmp"
-	if err := os.WriteFile(tempFile, data, 0644); err != nil {
-		return err
-	}
+		// Write to temp file first, then rename (atomic on most systems)
+		tempFile := db.filePath + ".tmp"
+		if err := os.WriteFile(tempFile, data, 0644); err != nil {
+			return err
+		}
 
-	return os.Rename(tempFile, db.filePath)
+		return os.Rename(tempFile, db.filePath)
+	*/
+	return nil
 }
 
 // CreateServer implements Database.CreateServer
@@ -506,14 +513,14 @@ func (tx *jsonTx) addLock(lock *sync.Mutex) {
 }
 
 // Mock methods to satisfy pgx.Tx interface (these won't be called in practice)
-func (tx *jsonTx) Begin(ctx context.Context) (pgx.Tx, error)   { return nil, nil }
-func (tx *jsonTx) Commit(ctx context.Context) error            { return nil }
-func (tx *jsonTx) Rollback(ctx context.Context) error          { return nil }
+func (tx *jsonTx) Begin(ctx context.Context) (pgx.Tx, error) { return nil, nil }
+func (tx *jsonTx) Commit(ctx context.Context) error          { return nil }
+func (tx *jsonTx) Rollback(ctx context.Context) error        { return nil }
 func (tx *jsonTx) CopyFrom(ctx context.Context, tableName pgx.Identifier, columnNames []string, rowSrc pgx.CopyFromSource) (int64, error) {
 	return 0, nil
 }
 func (tx *jsonTx) SendBatch(ctx context.Context, b *pgx.Batch) pgx.BatchResults { return nil }
-func (tx *jsonTx) LargeObjects() pgx.LargeObjects                                { return pgx.LargeObjects{} }
+func (tx *jsonTx) LargeObjects() pgx.LargeObjects                               { return pgx.LargeObjects{} }
 func (tx *jsonTx) Prepare(ctx context.Context, name, sql string) (*pgconn.StatementDescription, error) {
 	return nil, nil
 }

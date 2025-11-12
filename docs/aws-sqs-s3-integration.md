@@ -74,15 +74,34 @@ Messages sent to the SQS queue must be JSON with the following structure:
 
 ```json
 {
-  "s3_uri": "s3://my-bucket/path/to/registry.json"
+  "s3_url": "https://bucket.s3.region.amazonaws.com/path/to/registry.json"
 }
 ```
 
-### Example Message
+The `s3_url` field should contain an S3 Object URL in one of the following formats:
+
+- **Virtual-hosted-style with region**: `https://bucket.s3.region.amazonaws.com/key`
+- **Virtual-hosted-style (us-east-1)**: `https://bucket.s3.amazonaws.com/key`
+- **Path-style with region**: `https://s3.region.amazonaws.com/bucket/key`
+- **Path-style (us-east-1)**: `https://s3.amazonaws.com/bucket/key`
+
+### Example Messages
 
 ```json
 {
-  "s3_uri": "s3://mcp-registry-data/production/registry.json"
+  "s3_url": "https://mthenhaus-mcp-registry.s3.us-east-1.amazonaws.com/registry.json"
+}
+```
+
+```json
+{
+  "s3_url": "https://mcp-registry-data.s3.amazonaws.com/production/registry.json"
+}
+```
+
+```json
+{
+  "s3_url": "https://s3.us-west-2.amazonaws.com/my-bucket/path/to/registry.json"
 }
 ```
 
@@ -91,7 +110,7 @@ Messages sent to the SQS queue must be JSON with the following structure:
 1. **Registry Startup**: When the registry starts with SQS enabled, it initializes an SQS listener that polls the configured queue
 2. **Message Reception**: The listener uses long polling (20 seconds) to efficiently wait for messages
 3. **File Download**: When a message is received:
-   - The S3 URI is parsed to extract bucket and key
+   - The S3 Object URL is parsed to extract bucket and key
    - The file is downloaded from S3 to a temporary location
    - The temporary file atomically replaces the target file
 4. **Database Reload**: After the file is successfully downloaded, the JSON database reloads its data
@@ -123,7 +142,7 @@ aws s3 cp data/registry.json s3://mcp-registry-data/registry.json
 ```bash
 aws sqs send-message \
   --queue-url https://sqs.us-east-1.amazonaws.com/123456789012/mcp-registry-updates \
-  --message-body '{"s3_uri": "s3://mcp-registry-data/registry.json"}'
+  --message-body '{"s3_url": "https://mcp-registry-data.s3.us-east-1.amazonaws.com/registry.json"}'
 ```
 
 ### 5. Start Registry with SQS Enabled
@@ -143,7 +162,7 @@ To test the integration:
 
 1. Start the registry with SQS enabled
 2. Upload a modified `registry.json` to S3
-3. Send an SQS message with the S3 URI
+3. Send an SQS message with the S3 Object URL
 4. Check the logs for confirmation:
    ```
    Received SQS message: <message-id>

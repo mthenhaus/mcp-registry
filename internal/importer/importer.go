@@ -10,6 +10,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/modelcontextprotocol/registry/internal/aws"
 	"github.com/modelcontextprotocol/registry/internal/service"
 	"github.com/modelcontextprotocol/registry/internal/validators"
 	apiv0 "github.com/modelcontextprotocol/registry/pkg/api/v0"
@@ -29,6 +30,7 @@ func NewService(registry service.RegistryService) *Service {
 // 1. Local file paths (*.json files) - expects ServerJSON array format
 // 2. Direct HTTP URLs to seed.json files - expects ServerJSON array format
 // 3. Registry root URLs (automatically appends /v0/servers and paginates)
+// 4. S3 URIs (s3://bucket/key) - downloads from S3, expects ServerJSON array format
 func (s *Service) ImportFromPath(ctx context.Context, path string) error {
 	servers, err := readSeedFile(ctx, path)
 	if err != nil {
@@ -66,7 +68,10 @@ func readSeedFile(ctx context.Context, path string) ([]*apiv0.ServerJSON, error)
 	var data []byte
 	var err error
 
-	if strings.HasPrefix(path, "http://") || strings.HasPrefix(path, "https://") {
+	if strings.HasPrefix(path, "s3://") {
+		// Handle S3 URIs
+		data, err = fetchFromS3(ctx, path)
+	} else if strings.HasPrefix(path, "http://") || strings.HasPrefix(path, "https://") {
 		// Handle HTTP URLs
 		if strings.HasSuffix(path, "/v0/servers") || strings.Contains(path, "/v0/servers") {
 			// This is a registry API endpoint - fetch paginated data
@@ -83,7 +88,6 @@ func readSeedFile(ctx context.Context, path string) ([]*apiv0.ServerJSON, error)
 		return nil, fmt.Errorf("failed to read seed data from %s: %w", path, err)
 	}
 
-	// Parse ServerJSON array format
 	var serverResponses []apiv0.ServerJSON
 	if err := json.Unmarshal(data, &serverResponses); err != nil {
 		return nil, fmt.Errorf("failed to parse seed data as ServerJSON array format: %w", err)
@@ -187,4 +191,44 @@ func fetchFromRegistryAPI(ctx context.Context, baseURL string) ([]*apiv0.ServerJ
 	}
 
 	return allRecords, nil
+}
+
+// fetchFromS3 downloads a file from S3 and returns its contents
+func fetchFromS3(ctx context.Context, s3URI string) ([]byte, error) {
+	// Parse the S3 URI or URL
+	bucket, key, err := aws.ParseS3URL(s3URI)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse S3 URI/URL: %w", err)
+	}
+
+	log.Printf("Fetching seed data from S3: bucket=%s, key=%s", bucket, key)
+
+	// Create S3 downloader
+	downloader, err := aws.NewS3Downloader(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create S3 downloader: %w", err)
+	}
+
+	// Create a temporary file to download the S3 object
+	tmpFile, err := os.CreateTemp("", "seed-*.json")
+	if err != nil {
+		return nil, fmt.Errorf("failed to create temporary file: %w", err)
+	}
+	tmpPath := tmpFile.Name()
+	tmpFile.Close()
+	defer os.Remove(tmpPath) // Clean up temp file after reading
+
+	// Download the file from S3
+	if err := downloader.DownloadFile(ctx, bucket, key, tmpPath); err != nil {
+		return nil, fmt.Errorf("failed to download from S3: %w", err)
+	}
+
+	// Read the downloaded file
+	data, err := os.ReadFile(tmpPath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read downloaded file: %w", err)
+	}
+
+	log.Printf("Successfully fetched %d bytes from S3", len(data))
+	return data, nil
 }

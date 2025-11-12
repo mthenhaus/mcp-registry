@@ -34,6 +34,8 @@ var allowedOCIRegistries = map[string]bool{
 	// GitHub Container Registry
 	"ghcr.io": true,
 	// Google Artifact Registry (*.pkg.dev pattern handled in isAllowedRegistry)
+	// Microsoft Container Registry
+	"mcr.microsoft.com": true,
 }
 
 // ValidateOCI validates that an OCI image contains the correct MCP server name annotation.
@@ -47,6 +49,7 @@ var allowedOCIRegistries = map[string]bool{
 //   - Docker Hub (docker.io)
 //   - GitHub Container Registry (ghcr.io)
 //   - Google Artifact Registry (*.pkg.dev)
+//   - Microsoft Container Registry (mcr.microsoft.com)
 func ValidateOCI(ctx context.Context, pkg model.Package, serverName string) error {
 	if pkg.Identifier == "" {
 		return ErrMissingIdentifierForOCI

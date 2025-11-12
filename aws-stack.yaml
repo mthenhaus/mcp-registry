@@ -94,26 +94,25 @@ Resources:
       SubnetId: !Ref PublicSubnet2
 
   # S3 Bucket (if it doesn't exist)
-  S3Bucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: mthenhaus
-      NotificationConfiguration:
-        QueueConfigurations:
-          - Event: 's3:ObjectCreated:*'
-            Queue: !GetAtt SQSQueue.Arn
-            Filter:
-              S3Key:
-                Rules:
-                  - Name: suffix
-                    Value: 'registry.json'
+  #S3Bucket:
+  #  Type: AWS::S3::Bucket
+  #  Properties:
+  #    BucketName: mthenhaus
+  #    NotificationConfiguration:
+  #      QueueConfigurations:
+  #        - Event: 's3:ObjectCreated:*'
+  #          Queue: !GetAtt SQSQueue.Arn
+  #          Filter:
+  #            S3Key:
+  #              Rules:
+  #                - Name: suffix
+  #                  Value: 'registry.json'
 
   # SQS Queue for S3 notifications
   SQSQueue:
     Type: AWS::SQS::Queue
     Properties:
       QueueName: !Sub '${AWS::StackName}-s3-notifications'
-      VisibilityTimeoutSeconds: 300
       MessageRetentionPeriod: 1209600 # 14 days
 
   SQSQueuePolicy:
@@ -130,7 +129,8 @@ Resources:
             Resource: !GetAtt SQSQueue.Arn
             Condition:
               ArnEquals:
-                'aws:SourceArn': !GetAtt S3Bucket.Arn
+                'aws:SourceArn': arn:aws:s3:::mthenhaus-mcp-registry
+                #'aws:SourceArn': !GetAtt S3Bucket.Arn
 
   # Application Load Balancer
   ALBSecurityGroup:
@@ -140,10 +140,10 @@ Resources:
       VpcId: !Ref VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: 443
-          ToPort: 443
+          FromPort: 80
+          ToPort: 80
           CidrIp: 0.0.0.0/0
-          Description: 'HTTPS access from internet'
+          Description: 'HTTP access from internet'
       Tags:
         - Key: Name
           Value: !Sub '${AWS::StackName}-ALB-SG'
@@ -161,11 +161,11 @@ Resources:
         - !Ref ALBSecurityGroup
 
   # Self-signed certificate for HTTPS (for production, use ACM)
-  SelfSignedCertificate:
-    Type: AWS::CertificateManager::Certificate
-    Properties:
-      DomainName: !GetAtt ApplicationLoadBalancer.DNSName
-      ValidationMethod: DNS
+  #SelfSignedCertificate:
+  #  Type: AWS::CertificateManager::Certificate
+  #  Properties:
+  #    DomainName: !GetAtt ApplicationLoadBalancer.DNSName
+  #    ValidationMethod: DNS
 
   ALBListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -174,10 +174,10 @@ Resources:
         - Type: forward
           TargetGroupArn: !Ref ALBTargetGroup
       LoadBalancerArn: !Ref ApplicationLoadBalancer
-      Port: 443
-      Protocol: HTTPS
-      Certificates:
-        - CertificateArn: !Ref SelfSignedCertificate
+      Port: 80
+      Protocol: HTTP
+      #Certificates:
+      #  - CertificateArn: !Ref SelfSignedCertificate
 
   ALBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -187,7 +187,7 @@ Resources:
       Protocol: HTTP
       VpcId: !Ref VPC
       TargetType: ip
-      HealthCheckPath: /health
+      HealthCheckPath: /v0.1/health
       HealthCheckProtocol: HTTP
       HealthCheckIntervalSeconds: 30
       HealthCheckTimeoutSeconds: 5
@@ -213,11 +213,15 @@ Resources:
       Family: !Sub '${AWS::StackName}-task'
       Cpu: 256  # Minimum CPU for cost optimization
       Memory: 512  # Minimum memory for cost optimization
+      EphemeralStorage:
+        SizeInGiB: 30
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
       ExecutionRoleArn: !GetAtt ECSExecutionRole.Arn
       TaskRoleArn: !GetAtt ECSTaskRole.Arn
+      Volumes:
+        - Name: data-volume
       ContainerDefinitions:
         - Name: api-container
           Image: !Ref ECRImageURI
@@ -225,10 +229,41 @@ Resources:
             - ContainerPort: !Ref ContainerPort
               Protocol: tcp
           Environment:
-            - Name: SQS_QUEUE_URL
+            - Name: MCP_REGISTRY_DATABASE_TYPE
+              Value: jsonfile
+            - Name: MCP_REGISTRY_SEED_FROM
+              Value: https://mthenhaus-mcp-registry.s3.us-east-1.amazonaws.com/registry.json
+            - Name: MCP_REGISTRY_SQS_QUEUE_URL
               Value: !Ref SQSQueue
-            - Name: S3_BUCKET_NAME
-              Value: !Ref S3Bucket
+            - Name: MCP_REGISTRY_S3_BUCKET_NAME
+              Value: arn:aws:s3:::mthenhaus-mcp-registry
+            - Name: MCP_REGISTRY_ENVIRONMENT
+              Value: test
+            - Name: MCP_REGISTRY_GITHUB_CLIENT_ID
+              Value: Iv23licy3GSiM9Km5jtd
+            - Name: MCP_REGISTRY_GITHUB_CLIENT_SECRET
+              Value: 0e8db54879b02c29adef51795586f3c510a9341d
+            - Name: MCP_REGISTRY_JWT_PRIVATE_KEY
+              Value: 8103179d8ef955f6d3de6d6217224a909ec4060529dfeb1d4ca5a994537658cd
+            - Name: MCP_REGISTRY_ENABLE_ANONYMOUS_AUTH
+              Value: true
+            - Name: MCP_REGISTRY_OIDC_ENABLED
+              Value: true
+            - Name: MCP_REGISTRY_OIDC_ISSUER
+              Value: https://accounts.google.com
+            - Name: MCP_REGISTRY_OIDC_CLIENT_ID
+              Value: 32555940559.apps.googleusercontent.com
+            - Name: MCP_REGISTRY_OIDC_EXTRA_CLAIMS
+              Value: '[{"hd":"modelcontextprotocol.io"}]'
+            - Name: MCP_REGISTRY_OIDC_EDIT_PERMISSIONS
+              Value: '*'
+            - Name: MCP_REGISTRY_OIDC_PUBLISH_PERMISSIONS}
+              Value: '*'
+            - Name: MCP_REGISTRY_ENABLE_REGISTRY_VALIDATION
+              Value: true
+
+
+
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -236,6 +271,10 @@ Resources:
               awslogs-region: !Ref 'AWS::Region'
               awslogs-stream-prefix: ecs
           Essential: true
+          MountPoints:
+            - SourceVolume: data-volume
+              ContainerPath: /data
+              ReadOnly: false
 
   # ECS Service
   ECSSecurityGroup:
@@ -335,15 +374,14 @@ Resources:
             Version: '2012-10-17'
             Statement:
               - Effect: Allow
-                Action:
+                Action: 
                   - s3:GetObject
                   - s3:GetObjectVersion
-                Resource: !Sub '${S3Bucket}/registry.json'
+                Resource: arn:aws:s3:::mthenhaus-mcp-registry/registry.json
               - Effect: Allow
                 Action:
                   - s3:ListBucket
-                Resource: !GetAtt S3Bucket.Arn
-
+                Resource: arn:aws:s3:::mthenhaus-mcp-registry
 Outputs:
   LoadBalancerDNS:
     Description: 'DNS name of the load balancer'
@@ -363,11 +401,11 @@ Outputs:
     Export:
       Name: !Sub '${AWS::StackName}-SQSQueueURL'
 
-  S3BucketName:
-    Description: 'S3 Bucket Name'
-    Value: !Ref S3Bucket
-    Export:
-      Name: !Sub '${AWS::StackName}-S3BucketName'
+  #S3BucketName:
+  #  Description: 'S3 Bucket Name'
+  #  Value: !Ref S3Bucket
+  #  Export:
+  #    Name: !Sub '${AWS::StackName}-S3BucketName'
 
   ECSClusterName:
     Description: 'ECS Cluster Name'
