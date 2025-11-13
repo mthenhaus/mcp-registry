@@ -91,17 +91,17 @@
   },
   {
     "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
-    "name": "us.mthenhaus.mcp/docker/mcp-playwright",
+    "name": "us.mthenhaus.mcp/mcp-playwright",
     "description": "MCP server for Microsoft Playwright testing framework",
     "repository": {
       "url": "https://github.com/mthenhaus/playwright-mcp",
       "source": "github"
     },
-    "version": "latest",
+    "version": "1.0.0",
     "packages": [
       {
         "registryType": "oci",
-        "identifier": "public.ecr.aws/h8n5l2g5/mcp/playwright:latest",
+        "identifier": "public.ecr.aws/h8n5l2g5/mcp/playwright:1.0.0",
         "transport": {
           "type": "stdio"
         },

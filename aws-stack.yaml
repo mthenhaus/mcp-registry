@@ -140,10 +140,10 @@ Resources:
       VpcId: !Ref VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
+          FromPort: 443
+          ToPort: 443
           CidrIp: 0.0.0.0/0
-          Description: 'HTTP access from internet'
+          Description: 'HTTPS access from internet'
       Tags:
         - Key: Name
           Value: !Sub '${AWS::StackName}-ALB-SG'
@@ -226,6 +226,8 @@ Resources:
               Value: jsonfile
             - Name: MCP_REGISTRY_SEED_FROM
               Value: https://mthenhaus-mcp-registry.s3.us-east-1.amazonaws.com/registry.json
+            - Name: MCP_REGISTRY_SQS_ENABLED
+              Value: true
             - Name: MCP_REGISTRY_SQS_QUEUE_URL
               Value: !Ref SQSQueue
             - Name: MCP_REGISTRY_S3_BUCKET_NAME
