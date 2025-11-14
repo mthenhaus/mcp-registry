@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Official MCP Registry</title>
+    <title>Anywhere.re MCP Registry</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -15,11 +15,11 @@
     <div class="max-w-7xl mx-auto px-4 py-8 md:py-16 flex-1 w-full">
         <!-- Header -->
         <header class="mb-8 pb-8 border-b">
-            <h1 class="text-4xl font-bold text-gray-900 mb-2">Official MCP Registry</h1>
-            <p class="text-gray-600 text-lg mb-6">Discover Model Context Protocol servers</p>
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">Anywhere.re MCP Registry</h1>
+            <p class="text-gray-600 text-lg mb-6">Discover Model Context Protocol servers availble to Anywhere.re Developers</p>
             <div class="flex gap-6 text-sm">
-                <a href="https://github.com/modelcontextprotocol/registry" target="_blank" class="text-blue-600 hover:text-blue-700 font-medium">GitHub</a>
-                <a href="https://github.com/modelcontextprotocol/registry/tree/main/docs" target="_blank" class="text-blue-600 hover:text-blue-700 font-medium">Docs</a>
+                <a href="https://gitlab.com/realogy/core-pods/automation-engineering/apps/mcp-registry" target="_blank" class="text-blue-600 hover:text-blue-700 font-medium">GitLab</a>
+                <a href="https://gitlab.com/realogy/core-pods/automation-engineering/apps/mcp-registry/docs" target="_blank" class="text-blue-600 hover:text-blue-700 font-medium">Docs</a>
                 <a href="/docs" class="text-blue-600 hover:text-blue-700 font-medium">API Reference</a>
             </div>
         </header>
@@ -92,7 +92,7 @@
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex justify-between items-center text-sm text-gray-600">
                 <div>
-                    Built in the open by <a href="https://github.com/modelcontextprotocol/registry" target="_blank" class="text-blue-600 hover:underline">MCP contributors</a>
+                    Built by the Automation Engineering Team at Anywhere.re
                 </div>
                 <button id="debug-btn" class="text-blue-600 hover:underline">
                     Server: <span id="server-name">Production</span> (<span id="version-info">...</span>)
@@ -152,9 +152,9 @@
 
             switch (selection) {
                 case 'prod':
-                    return 'https://registry.modelcontextprotocol.io';
+                    return 'https://mcp.mthenhaus.us';
                 case 'staging':
-                    return 'https://staging.registry.modelcontextprotocol.io';
+                    return 'https://mcp.mthenhaus.us';
                 case 'local':
                     return '';
                 case 'custom':
@@ -309,7 +309,7 @@
                     latestOnly = document.getElementById('latest-only').checked;
                 }
 
-                let url = `${baseUrl}/v0.1/servers?limit=96`;
+                let url = `${baseUrl}/v0.1/servers?limit=24`;
                 if (cursor) url += `&cursor=${encodeURIComponent(cursor)}`;
                 if (search) url += `&search=${encodeURIComponent(search)}`;
                 if (latestOnly) url += `&version=latest`;
