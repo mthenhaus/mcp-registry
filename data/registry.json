@@ -1,213 +1,148 @@
-[
-  {
-    "server_name": "io.github.domdomegg/airtable-mcp-server",
-    "version": "1.7.2",
-    "status": "active",
-    "published_at": "2025-11-04T20:13:58.529905274Z",
-    "updated_at": "2025-11-04T20:13:58.529905274Z",
-    "is_latest": false,
-    "value": {
-      "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
-      "name": "io.github.domdomegg/airtable-mcp-server",
-      "description": "Read and write access to Airtable database schemas, tables, and records.",
-      "repository": {
-        "url": "https://github.com/domdomegg/airtable-mcp-server.git",
-        "source": "github"
-      },
-      "version": "1.7.2",
-      "icons": [
-        {
-          "src": "https://airtable.com/images/favicon/favicon-32x32.png",
-          "mimeType": "image/png",
-          "sizes": ["32x32"]
-        }
-      ],
-      "packages": [
-        {
-          "registryType": "npm",
-          "identifier": "airtable-mcp-server",
-          "version": "1.7.2",
-          "runtimeHint": "npx",
-          "transport": {
-            "type": "stdio"
-          },
-          "environmentVariables": [
-            {
-              "description": "Airtable personal access token (e.g., pat123.abc123). Create at https://airtable.com/create/tokens/new with scopes: schema.bases:read, data.records:read, and optionally schema.bases:write and data.records:write.",
-              "isRequired": true,
-              "isSecret": true,
-              "name": "AIRTABLE_API_KEY"
-            }
-          ]
+{
+  "servers": [
+    {
+      "server": {
+        "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+        "name": "com.joelverhagen.mcp/Knapcode.SampleMcpServer",
+        "description": "A sample MCP server using the MCP C# SDK. Generates random numbers and random weather.",
+        "repository": {
+          "url": "https://github.com/joelverhagen/Knapcode.SampleMcpServer",
+          "source": "github"
         },
-        {
-          "registryType": "oci",
-          "identifier": "docker.io/domdomegg/airtable-mcp-server:1.7.2",
-          "runtimeHint": "docker",
-          "transport": {
-            "type": "stdio"
-          },
-          "environmentVariables": [
-            {
-              "description": "Airtable personal access token (e.g., pat123.abc123). Create at https://airtable.com/create/tokens/new with scopes: schema.bases:read, data.records:read, and optionally schema.bases:write and data.records:write.",
-              "isRequired": true,
-              "isSecret": true,
-              "name": "AIRTABLE_API_KEY"
-            }
-          ]
-        },
-        {
-          "registryType": "mcpb",
-          "identifier": "https://github.com/domdomegg/airtable-mcp-server/releases/download/v1.7.2/airtable-mcp-server.mcpb",
-          "fileSha256": "8220de07a08ebe908f04da139ea03dbfe29758141347e945da60535fb7bcca20",
-          "transport": {
-            "type": "stdio"
+        "version": "0.10.0-beta.10",
+        "packages": [
+          {
+            "registryType": "nuget",
+            "registryBaseUrl": "https://api.nuget.org",
+            "identifier": "Knapcode.SampleMcpServer",
+            "version": "0.10.0-beta.10",
+            "transport": {
+              "type": "stdio"
+            },
+            "packageArguments": [
+              {
+                "value": "mcp",
+                "type": "positional"
+              },
+              {
+                "value": "start",
+                "type": "positional"
+              }
+            ],
+            "environmentVariables": [
+              {
+                "value": "{weather_choices}",
+                "variables": {
+                  "weather_choices": {
+                    "description": "Comma separated list of weather descriptions to randomly select."
+                  }
+                },
+                "name": "WEATHER_CHOICES"
+              }
+            ]
           }
-        }
-      ]
-    },
-    "meta": {
-      "status": "active",
-      "publishedAt": "2025-11-04T20:13:58.529905274Z",
-      "updatedAt": "2025-11-04T20:13:58.529905274Z",
-      "isLatest": true
-    }
-  },
-  {
-    "server_name": "io.github.domdomegg/airtable-mcp-server",
-    "version": "1.7.3",
-    "status": "active",
-    "published_at": "2025-11-04T20:13:58.530039515Z",
-    "updated_at": "2025-11-04T20:13:58.530039515Z",
-    "is_latest": true,
-    "value": {
-      "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
-      "name": "io.github.domdomegg/airtable-mcp-server",
-      "description": "Read and write access to Airtable database schemas, tables, and records.",
-      "repository": {
-        "url": "https://github.com/domdomegg/airtable-mcp-server.git",
-        "source": "github"
+        ]
       },
-      "version": "1.7.3",
-      "packages": [
-        {
-          "registryType": "npm",
-          "identifier": "airtable-mcp-server",
-          "version": "1.7.3",
-          "runtimeHint": "npx",
-          "transport": {
-            "type": "stdio"
-          },
-          "environmentVariables": [
-            {
-              "description": "Airtable personal access token (e.g., pat123.abc123). Create at https://airtable.com/create/tokens/new with scopes: schema.bases:read, data.records:read, and optionally schema.bases:write and data.records:write.",
-              "isRequired": true,
-              "isSecret": true,
-              "name": "AIRTABLE_API_KEY"
-            }
-          ]
+      "_meta": {
+        "io.modelcontextprotocol.registry/official": {
+          "status": "active",
+          "publishedAt": "2025-10-28T14:46:30.431134Z",
+          "updatedAt": "2025-10-28T14:46:30.431134Z",
+          "isLatest": false
+        }
+      }
+    },
+    {
+      "server": {
+        "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+        "name": "com.joelverhagen.mcp/Knapcode.SampleMcpServer",
+        "description": "A sample MCP server using the MCP C# SDK. Generates random numbers and random weather.",
+        "repository": {
+          "url": "https://github.com/joelverhagen/Knapcode.SampleMcpServer",
+          "source": "github"
         },
-        {
-          "registryType": "oci",
-          "identifier": "docker.io/domdomegg/airtable-mcp-server:1.7.3",
-          "runtimeHint": "docker",
-          "transport": {
-            "type": "stdio"
-          },
-          "environmentVariables": [
-            {
-              "description": "Airtable personal access token (e.g., pat123.abc123). Create at https://airtable.com/create/tokens/new with scopes: schema.bases:read, data.records:read, and optionally schema.bases:write and data.records:write.",
-              "isRequired": true,
-              "isSecret": true,
-              "name": "AIRTABLE_API_KEY"
-            }
-          ]
+        "version": "0.10.0-beta.31",
+        "packages": [
+          {
+            "registryType": "nuget",
+            "registryBaseUrl": "https://api.nuget.org",
+            "identifier": "Knapcode.SampleMcpServer",
+            "version": "0.10.0-beta.31",
+            "transport": {
+              "type": "stdio"
+            },
+            "packageArguments": [
+              {
+                "value": "mcp",
+                "type": "positional"
+              },
+              {
+                "value": "start",
+                "type": "positional"
+              }
+            ],
+            "environmentVariables": [
+              {
+                "value": "{weather_choices}",
+                "variables": {
+                  "weather_choices": {
+                    "description": "Comma separated list of weather descriptions to randomly select."
+                  }
+                },
+                "name": "WEATHER_CHOICES"
+              }
+            ]
+          }
+        ]
+      },
+      "_meta": {
+        "io.modelcontextprotocol.registry/official": {
+          "status": "active",
+          "publishedAt": "2025-11-13T19:18:12.513761Z",
+          "updatedAt": "2025-11-13T19:18:12.513761Z",
+          "isLatest": true
+        }
+      }
+    },
+    {
+      "server": {
+        "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+        "name": "io.github.goreleaser/mcp",
+        "description": "GoReleaser MCP server for build automation",
+        "repository": {
+          "url": "https://github.com/goreleaser/mcp",
+          "source": "github"
         },
-        {
-          "registryType": "mcpb",
-          "identifier": "https://github.com/domdomegg/airtable-mcp-server/releases/download/v1.7.3/airtable-mcp-server.mcpb",
-          "fileSha256": "0f28a9129cfebd262dfb77854c872355d21401bb3e056575b3027081f5d570ca",
-          "transport": {
-            "type": "stdio"
+        "version": "0.1.4",
+        "packages": [
+          {
+            "registryType": "oci",
+            "identifier": "ghcr.io/goreleaser/mcp:0.1.4",
+            "transport": {
+              "type": "stdio"
+            }
+          },
+          {
+            "registryType": "npm",
+            "identifier": "@goreleaser/mcp",
+            "version": "0.1.4",
+            "transport": {
+              "type": "stdio"
+            }
           }
-        }
-      ]
-    },
-    "meta": {
-      "status": "active",
-      "publishedAt": "2025-11-04T20:13:58.530039515Z",
-      "updatedAt": "2025-11-04T20:13:58.530039515Z",
-      "isLatest": true
-    }
-  },
-  {
-    "server_name": "io.github.domdomegg/time-mcp-nuget",
-    "version": "1.0.8",
-    "status": "active",
-    "published_at": "2025-11-04T20:13:58.530308185Z",
-    "updated_at": "2025-11-04T20:13:58.530308185Z",
-    "is_latest": true,
-    "value": {
-      "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
-      "name": "io.github.domdomegg/time-mcp-nuget",
-      "description": "Get the current UTC time in RFC 3339 format.",
-      "repository": {
-        "url": "https://github.com/domdomegg/time-mcp-nuget.git",
-        "source": "github"
+        ]
       },
-      "version": "1.0.8",
-      "packages": [
-        {
-          "registryType": "nuget",
-          "identifier": "TimeMcpServer",
-          "version": "1.0.8",
-          "runtimeHint": "dnx",
-          "transport": {
-            "type": "stdio"
-          }
+      "_meta": {
+        "io.modelcontextprotocol.registry/official": {
+          "status": "active",
+          "publishedAt": "2025-11-09T19:09:15.32741Z",
+          "updatedAt": "2025-11-09T19:09:15.32741Z",
+          "isLatest": true
         }
-      ]
-    },
-    "meta": {
-      "status": "active",
-      "publishedAt": "2025-11-04T20:13:58.530308185Z",
-      "updatedAt": "2025-11-04T20:13:58.530308185Z",
-      "isLatest": true
+      }
     }
-  },
-  {
-    "server_name": "io.github.domdomegg/time-mcp-pypi",
-    "version": "1.0.6",
-    "status": "active",
-    "published_at": "2025-11-04T20:13:58.53043076Z",
-    "updated_at": "2025-11-04T20:13:58.53043076Z",
-    "is_latest": true,
-    "value": {
-      "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
-      "name": "io.github.domdomegg/time-mcp-pypi",
-      "description": "Get the current UTC time in RFC 3339 format.",
-      "repository": {
-        "url": "https://github.com/domdomegg/time-mcp-pypi.git",
-        "source": "github"
-      },
-      "version": "1.0.6",
-      "packages": [
-        {
-          "registryType": "pypi",
-          "identifier": "time-mcp-pypi",
-          "version": "1.0.6",
-          "runtimeHint": "python",
-          "transport": {
-            "type": "stdio"
-          }
-        }
-      ]
-    },
-    "meta": {
-      "status": "active",
-      "publishedAt": "2025-11-04T20:13:58.53043076Z",
-      "updatedAt": "2025-11-04T20:13:58.53043076Z",
-      "isLatest": true
-    }
+  ],
+  "metadata": {
+    "count": 3
   }
-]
+}

@@ -82,13 +82,20 @@ func (db *JSONFileDB) load() error {
 		return nil
 	}
 
-	var serverResponses []apiv0.ServerJSON
-	if err := json.Unmarshal(data, &serverResponses); err != nil {
+	var fileData jsonFileData
+	if err := json.Unmarshal(data, &fileData); err != nil {
 		return err
 	}
 
-	var fileData jsonFileData
-	fileData.Servers = make([]serverRecord, 0, len(serverResponses))
+	/*
+		var serverResponses []apiv0.ServerJSON
+		if err := json.Unmarshal(data, &serverResponses); err != nil {
+			return err
+		}
+
+		var fileData jsonFileData
+		fileData.Servers = make([]serverRecord, 0, len(serverResponses))
+	*/
 
 	db.data = &fileData
 	return nil

@@ -224,6 +224,8 @@ Resources:
           Environment:
             - Name: MCP_REGISTRY_DATABASE_TYPE
               Value: jsonfile
+            - Name: MCP_REGISTRY_JSON_FILE_PATH
+              Value: /tmp/data/registry.json
             - Name: MCP_REGISTRY_SEED_FROM
               Value: https://mthenhaus-mcp-registry.s3.us-east-1.amazonaws.com/registry.json
             - Name: MCP_REGISTRY_SQS_ENABLED
@@ -243,7 +245,7 @@ Resources:
             - Name: MCP_REGISTRY_ENABLE_ANONYMOUS_AUTH
               Value: true
             - Name: MCP_REGISTRY_OIDC_ENABLED
-              Value: true
+              Value: false
             - Name: MCP_REGISTRY_OIDC_ISSUER
               Value: https://accounts.google.com
             - Name: MCP_REGISTRY_OIDC_CLIENT_ID
@@ -265,7 +267,7 @@ Resources:
           Essential: true
           MountPoints:
             - SourceVolume: data-volume
-              ContainerPath: /data
+              ContainerPath: /tmp/data
               ReadOnly: false
 
   # ECS Service

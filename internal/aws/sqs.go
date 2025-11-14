@@ -27,7 +27,17 @@ type SQSListener struct {
 
 // SQSMessage represents the expected structure of messages from SQS
 type SQSMessage struct {
-	S3URL string `json:"s3_url"` // S3 Object URL to download from (e.g., "https://bucket.s3.region.amazonaws.com/path/to/file.json")
+	Records []struct {
+		S3 struct {
+			Bucket struct {
+				Name string `json:"name"`
+			} `json:"bucket"`
+			Object struct {
+				Key string `json:"key"`
+				URL string `json:"url,omitempty"` // Optional if custom
+			} `json:"object"`
+		} `json:"s3"`
+	} `json:"Records"`
 }
 
 // SQSListenerConfig holds configuration for the SQS listener
@@ -155,14 +165,11 @@ func (l *SQSListener) processMessage(ctx context.Context, msg types.Message) err
 		return fmt.Errorf("failed to parse message body: %w", err)
 	}
 
-	if sqsMsg.S3URL == "" {
-		return fmt.Errorf("message missing s3_url field")
-	}
-
-	// Parse S3 Object URL
-	bucket, key, err := ParseS3URL(sqsMsg.S3URL)
-	if err != nil {
-		return fmt.Errorf("invalid S3 URL: %w", err)
+	// Extract the S3 URL
+	var bucket, key string
+	for _, record := range sqsMsg.Records {
+		bucket = record.S3.Bucket.Name
+		key = record.S3.Object.Key
 	}
 
 	// Download the file from S3
@@ -170,7 +177,7 @@ func (l *SQSListener) processMessage(ctx context.Context, msg types.Message) err
 		return fmt.Errorf("failed to download file from S3: %w", err)
 	}
 
-	log.Printf("Successfully downloaded file from %s to %s", sqsMsg.S3URL, l.targetFilePath)
+	log.Printf("Successfully downloaded file from %s/%s to %s", bucket, key, l.targetFilePath)
 
 	// Call the reload callback to reload the database
 	if l.reloadCallback != nil {

@@ -145,6 +145,7 @@ func ValidateOCI(ctx context.Context, pkg model.Package, serverName string) erro
 // isAllowedRegistry checks if the given registry is in the allowlist.
 // It handles registry aliases and wildcard patterns (e.g., *.pkg.dev for Artifact Registry).
 func isAllowedRegistry(registry string) bool {
+	log.Printf("Checking for valid regsitry: %s", registry)
 	// Direct match
 	if allowedOCIRegistries[registry] {
 		return true
