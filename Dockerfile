@@ -12,7 +12,8 @@ COPY bin/registry ./
 RUN chmod +x ./registry
 
 # Copy initial data files
-COPY data /tmp/data
+COPY data/registry.json /tmp/data/registry.json
+COPY data/seed.json /tmp/data/seed.json
 
 # Expose port 8080
 EXPOSE 8080

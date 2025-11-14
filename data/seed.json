@@ -144,5 +144,87 @@
         ]
       }
     ]
+  },
+  {
+    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+    "name": "ai.exa/exa",
+    "description": "Fast, intelligent web search and web crawling.\n\nNew mcp tool: Exa-code is a context tool for coding ",
+    "repository": {
+      "url": "https://github.com/exa-labs/exa-mcp-server",
+      "source": "github"
+    },
+    "version": "3.0.9",
+    "remotes": [
+      {
+        "type": "streamable-http",
+        "url": "https://mcp.exa.ai/mcp"
+      }
+    ]
+  },
+  {
+    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+    "name": "ai.explorium/mcp-explorium",
+    "description": "Access live company and contact data from Explorium's AgentSource B2B platform.",
+    "repository": {
+      "url": "https://github.com/explorium-ai/mcp-explorium",
+      "source": "github"
+    },
+    "version": "1.0.1",
+    "remotes": [
+      {
+        "type": "streamable-http",
+        "url": "https://mcp-github-registry.explorium.ai/mcp"
+      }
+    ]
+  },
+  {
+    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+    "name": "ai.smithery/LinkupPlatform-linkup-mcp-server",
+    "description": "Search the web in real time to get trustworthy, source-backed answers. Find the latest news and co…",
+    "repository": {
+      "url": "https://github.com/LinkupPlatform/linkup-mcp-server",
+      "source": "github"
+    },
+    "version": "1.0.0",
+    "remotes": [
+      {
+        "type": "streamable-http",
+        "url": "https://server.smithery.ai/@LinkupPlatform/linkup-mcp-server/mcp",
+        "headers": [
+          {
+            "description": "Bearer token for Smithery authentication",
+            "isRequired": true,
+            "value": "Bearer {smithery_api_key}",
+            "isSecret": true,
+            "name": "Authorization"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+    "name": "ai.smithery/ScrapeGraphAI-scrapegraph-mcp",
+    "description": "Enable language models to perform advanced AI-powered web scraping with enterprise-grade reliability.",
+    "repository": {
+      "url": "https://github.com/ScrapeGraphAI/scrapegraph-mcp",
+      "source": "github"
+    },
+    "version": "1.16.0",
+    "remotes": [
+      {
+        "type": "streamable-http",
+        "url": "https://server.smithery.ai/@ScrapeGraphAI/scrapegraph-mcp/mcp",
+        "headers": [
+          {
+            "description": "Bearer token for Smithery authentication",
+            "isRequired": true,
+            "value": "Bearer {smithery_api_key}",
+            "isSecret": true,
+            "name": "Authorization"
+          }
+        ]
+      }
+    ]
   }
 ]

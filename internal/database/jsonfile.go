@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"hash/fnv"
+	"log"
 	"os"
 	"sort"
 	"strings"
@@ -19,11 +20,13 @@ import (
 
 // JSONFileDB implements the Database interface using a local JSON file
 type JSONFileDB struct {
-	filePath string
-	mu       sync.RWMutex
-	data     *jsonFileData
-	locks    map[uint64]*sync.Mutex // advisory locks by server name hash
-	locksMu  sync.Mutex
+	filePath       string
+	mu             sync.RWMutex
+	data           *jsonFileData
+	locks          map[uint64]*sync.Mutex // advisory locks by server name hash
+	locksMu        sync.Mutex
+	loggedInvalid  map[string]bool // tracks which invalid records have been logged
+	loggedInvalidMu sync.Mutex
 }
 
 // jsonFileData represents the structure stored in the JSON file
@@ -54,9 +57,10 @@ type jsonTx struct {
 // NewJSONFileDB creates a new JSON file-based database
 func NewJSONFileDB(ctx context.Context, filePath string) (*JSONFileDB, error) {
 	db := &JSONFileDB{
-		filePath: filePath,
-		data:     &jsonFileData{Servers: []serverRecord{}},
-		locks:    make(map[uint64]*sync.Mutex),
+		filePath:      filePath,
+		data:          &jsonFileData{Servers: []serverRecord{}},
+		locks:         make(map[uint64]*sync.Mutex),
+		loggedInvalid: make(map[string]bool),
 	}
 
 	// Try to load existing data
@@ -105,6 +109,12 @@ func (db *JSONFileDB) load() error {
 func (db *JSONFileDB) Reload() error {
 	db.mu.Lock()
 	defer db.mu.Unlock()
+
+	// Clear logged invalid records map so warnings can be shown for new data
+	db.loggedInvalidMu.Lock()
+	db.loggedInvalid = make(map[string]bool)
+	db.loggedInvalidMu.Unlock()
+
 	return db.load()
 }
 
@@ -262,6 +272,20 @@ func (db *JSONFileDB) ListServers(ctx context.Context, tx pgx.Tx, filter *Server
 	// Filter and collect results
 	for i := startIndex; i < len(db.data.Servers); i++ {
 		record := db.data.Servers[i]
+
+		// Skip records with nil Value (corrupted or incompatible data)
+		if record.Value == nil {
+			// Log only once per unique invalid record to avoid spam
+			recordKey := fmt.Sprintf("%s:%s", record.ServerName, record.Version)
+			db.loggedInvalidMu.Lock()
+			if !db.loggedInvalid[recordKey] {
+				log.Printf("Warning: Skipping invalid server record at index %d (ServerName: %s, Version: %s) - nil Value field, possibly due to incompatible data format",
+					i, record.ServerName, record.Version)
+				db.loggedInvalid[recordKey] = true
+			}
+			db.loggedInvalidMu.Unlock()
+			continue
+		}
 
 		// Apply filters
 		if filter != nil {

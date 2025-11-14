@@ -1,4 +1,4 @@
-.PHONY: help build test test-unit test-integration test-endpoints test-publish test-all lint lint-fix validate validate-schemas validate-examples check ko-build ko-rebuild dev-compose dev-down clean publisher generate-schema check-schema
+.PHONY: help build test test-unit test-integration test-endpoints test-publish test-all lint lint-fix validate validate-schemas validate-examples check dev-up dev-down clean publisher generate-schema check-schema
 
 # Default target
 help: ## Show this help message
@@ -8,10 +8,12 @@ help: ## Show this help message
 # Build targets
 registry: ## Build the registry application with version info
 	@mkdir -p bin
+	export CGO_ENABLED=0
 	go build -ldflags="-X main.Version=dev-$(shell git rev-parse --short HEAD) -X main.GitCommit=$(shell git rev-parse HEAD) -X main.BuildTime=$(shell date -u +%Y-%m-%dT%H:%M:%SZ)" -o bin/registry ./cmd/registry
 
 publisher: ## Build the publisher tool with version info
 	@mkdir -p bin
+	export CGO_ENABLED=0
 	go build -ldflags="-X main.Version=dev-$(shell git rev-parse --short HEAD) -X main.GitCommit=$(shell git rev-parse HEAD) -X main.BuildTime=$(shell date -u +%Y-%m-%dT%H:%M:%SZ)" -o bin/mcp-publisher ./cmd/publisher
 
 # Schema generation targets
@@ -83,21 +85,7 @@ check: dev-down lint validate test-all ## Run all checks (lint, validate, unit t
 	@echo "All checks passed!"
 
 # Development targets
-ko-build: ## Build registry image using ko (loads into local docker daemon)
-	@echo "Building registry with ko..."
-	VERSION=dev-$$(git rev-parse --short HEAD) \
-	GIT_COMMIT=$$(git rev-parse HEAD) \
-	BUILD_TIME=$$(date -u +%Y-%m-%dT%H:%M:%SZ) \
-	KO_DOCKER_REPO=ko.local \
-	ko build --local --base-import-paths --sbom=none ./cmd/registry
-	@echo "Image built: ko.local/registry"
-
-ko-rebuild: ## Rebuild with ko and restart registry container
-	@$(MAKE) ko-build
-	@echo "Restarting registry container..."
-	@docker compose restart registry
-
-dev-up: ko-build ## Start development environment with Docker Compose (builds with ko first)
+dev-up: registry ## Start development environment with Docker Compose (builds registry first)
 	@echo "Starting Docker Compose..."
 	docker compose up
 

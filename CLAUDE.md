@@ -5,14 +5,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Essential Commands
 
 ### Building
-- `make build` - Build the registry application with version info
+- `make registry` - Build the registry application with version info
 - `make publisher` - Build the publisher CLI tool (`bin/mcp-publisher`)
-- `ko build --local --base-import-paths --sbom=none ./cmd/registry` - Build container image with ko
 
 ### Development
-- `make dev-compose` (or `make dev-up`) - Start full development environment (builds with ko and starts Docker Compose)
+- `make dev-up` - Start full development environment (builds regsitry and starts Docker Compose)
 - `make dev-down` - Stop development environment
-- `make ko-rebuild` - Rebuild image with ko and restart registry container
 - Registry runs at `localhost:8080` by default
 
 ### Testing
@@ -135,11 +133,10 @@ The MCP Registry is a **Go-based HTTP API** that serves as an app store for MCP 
 
 ### Container Image Building
 
-**Uses ko** (https://ko.build):
-- `ko build` creates minimal container images for Go apps
+**Uses Docker**:
+- `docker build -t mcp/registry:latest .` creates minimal container images for Go apps
 - Images loaded into local Docker daemon for development
-- Base image configurable via `KO_DEFAULTBASEIMAGE` (default: static, tests use alpine)
-- Configured in `.ko.yaml`
+- Configured in `Dockerfile`
 
 ### Seeding Behavior
 
@@ -165,9 +162,9 @@ See `AWS_INTEGRATION_SUMMARY.md` and `docs/aws-sqs-s3-integration.md` for detail
 ## Development Workflow
 
 ### Local Setup
-1. Install prerequisites: Docker, Go 1.24.x, ko, golangci-lint v2.4.0
+1. Install prerequisites: Docker, Go 1.24.x, golangci-lint v2.4.0
 2. Configure environment variables (see `.env.example`)
-3. Run `make dev-compose` to start services
+3. Run `make dev-up` to start services
 4. Registry available at `http://localhost:8080`
 
 ### Testing Strategy

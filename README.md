@@ -33,7 +33,6 @@ Often (but not always) ideas flow through this pipeline:
 
 - **Docker**
 - **Go 1.24.x**
-- **ko** - Container image builder for Go ([installation instructions](https://ko.build/install/))
 - **golangci-lint v2.4.0**
 
 #### Running the server
@@ -49,7 +48,7 @@ This starts the registry at [`localhost:8080`](http://localhost:8080) with a JSO
 - **JSON file** (default): Simple file-based storage, no external dependencies
 - **PostgreSQL**: For production use or advanced features (see below)
 
-**Note:** The registry uses [ko](https://ko.build) to build container images. The `make dev-compose` command automatically builds the registry image with ko and loads it into your local Docker daemon before starting the services.
+**Note:** The registry uses Docker to build container images. The `make dev-up` command automatically builds the registry image and loads it into your local Docker daemon before starting the services.
 
 By default, the registry seeds from the production API with a filtered subset of servers (to keep startup fast). This ensures your local environment mirrors production behavior and all seed data passes validation. For offline development you can seed from a file without validation with `MCP_REGISTRY_SEED_FROM=data/seed.json MCP_REGISTRY_ENABLE_REGISTRY_VALIDATION=false make dev-compose`.
 
